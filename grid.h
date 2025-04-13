@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <vector>
 
+std::vector<std::vector<int>> makeGrid(int n);
+
 class renderGrid {
 public:
     renderGrid(SDL_Renderer* ren, int n, int boxSize, int padX, int padY);

@@ -1,4 +1,7 @@
 #include "grid.h"
+#include <vector>
+#include <cstdlib>
+#include <ctime>
 
 renderGrid::renderGrid(SDL_Renderer* ren, int n, int box, int x, int y)
     : renderer(ren), size(n), boxSize(box), padX(x), padY(y) {}
@@ -42,3 +45,11 @@ void renderGrid::draw(const std::vector<std::vector<int>>& playerMat) {
         }
 }
 
+std::vector<std::vector<int>> makeGrid(int n) {
+    std::srand(std::time(nullptr));
+    std::vector<std::vector<int>> mat(n, std::vector<int>(n));
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+            mat[i][j] = std::rand() % 2;
+    return mat;
+}

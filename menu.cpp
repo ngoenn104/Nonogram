@@ -42,7 +42,7 @@ void Menu::render() {
         return;
     }
 
-    //background
+    //Background
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
 
     //"Nonogram"
@@ -101,7 +101,7 @@ bool Menu::isButtonClicked(int x, int y, int buttonX, int buttonY, int width, in
 
 void Menu::handleEvents(SDL_Event& e) {
     if (gameplay) {
-        if (gameplay->isGameOver()) return;
+        if (gameplay->isLose()) return;
         gameplay->handleEvents(e);
         return;
     }
@@ -132,6 +132,5 @@ void Menu::startGame(int size) {
     boardSize = size;
     isPlaying = true;
 
-    Game* game = new Game(size);
     gameplay = new Gameplay(renderer, size, fontSmall);
 }

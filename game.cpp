@@ -1,4 +1,6 @@
 #include "game.h"
+#include "status.h"
+#include "gameplay.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -62,3 +64,20 @@ void Game::genClues() {
         colClues.push_back(genClueForLine(col));
     }
 }
+
+void handleGame(SDL_Renderer* renderer, bool* isInMenu, Gameplay* gameplay) {
+    SDL_Event e;
+
+    while (SDL_PollEvent(&e)) {
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
+
+        if (!gameplay->win && !gameplay->isLose()) {
+            gameplay->handleEvents(e);
+        }
+    }
+
+    gameplay->render();
+    SDL_RenderPresent(renderer);
+}
+

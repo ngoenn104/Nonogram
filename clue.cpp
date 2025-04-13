@@ -87,3 +87,45 @@ TTF_Font* ClueDrawer::getFitFont(const std::string& text, int maxWidth, int star
     return nullptr;
 }
 
+void makeClue(int n, const std::vector<std::vector<int>>& matrix,
+              std::vector<std::vector<int>>& rowClue,
+              std::vector<std::vector<int>>& colClue) {
+    rowClue.clear();
+    colClue.clear();
+    rowClue.resize(n);
+    colClue.resize(n);
+
+    // row clues
+    for (int i = 0; i < n; ++i) {
+        int count = 0;
+        for (int j = 0; j < n; ++j) {
+            if (matrix[i][j] == 1) {
+                ++count;
+            } else if (count > 0) {
+                rowClue[i].push_back(count);
+                count = 0;
+            }
+        }
+        if (count > 0)
+            rowClue[i].push_back(count);
+        if (rowClue[i].empty())
+            rowClue[i].push_back(0);
+    }
+
+    // column clues
+    for (int j = 0; j < n; ++j) {
+        int count = 0;
+        for (int i = 0; i < n; ++i) {
+            if (matrix[i][j] == 1) {
+                ++count;
+            } else if (count > 0) {
+                colClue[j].push_back(count);
+                count = 0;
+            }
+        }
+        if (count > 0)
+            colClue[j].push_back(count);
+        if (colClue[j].empty())
+            colClue[j].push_back(0);
+    }
+}

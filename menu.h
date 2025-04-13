@@ -13,7 +13,7 @@ public:
     ~Menu();
     void render();
     void handleEvents(SDL_Event& e);
-    bool isButtonClicked(int x, int y, int buttonX, int buttonY, int width, int height);  // Kiểm tra vị trí click của chuột
+    bool isButtonClicked(int x, int y, int buttonX, int buttonY, int width, int height);
 
     void startGame(int size);
 

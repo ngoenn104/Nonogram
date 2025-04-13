@@ -6,6 +6,10 @@
 #include <vector>
 #include <string>
 
+void makeClue(int n, const std::vector<std::vector<int>>& matrix,
+              std::vector<std::vector<int>>& rowClue,
+              std::vector<std::vector<int>>& colClue);
+
 class ClueDrawer {
 public:
     ClueDrawer(SDL_Renderer* ren, TTF_Font* fallbackFont, int n, int boxSize, int padX, int padY);
