@@ -1,12 +1,25 @@
 #include "gameplay.h"
 #include "status.h"
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
 
 Gameplay::Gameplay(SDL_Renderer* renderer, int size, TTF_Font* font)
-    : renderer(renderer), gridSize(size), font(font), lives(3), gameOver(false), win(false) {
+    : renderer(renderer), font(font), gridSize(size), gameOver(false), win(false), lives(3) {
+
+    SDL_Surface* bgSurface = IMG_Load("assets/Bg.png");
+    bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
+    SDL_FreeSurface(bgSurface);
+
+    SDL_Surface* heartAliveSurface = IMG_Load("assets/Alive.png");
+    SDL_Surface* heartDeadSurface = IMG_Load("assets/Dead.png");
+    heartAlive = SDL_CreateTextureFromSurface(renderer, heartAliveSurface);
+    heartDead = SDL_CreateTextureFromSurface(renderer, heartDeadSurface);
+    SDL_FreeSurface(heartAliveSurface);
+    SDL_FreeSurface(heartDeadSurface);
+
     int maxWidth = 600;
     int maxHeight = 450;
     cellSize = std::min(maxWidth / gridSize, maxHeight / gridSize);
@@ -64,11 +77,23 @@ Gameplay::~Gameplay() {
     if (fontClue) {
         TTF_CloseFont(fontClue);
     }
+    SDL_DestroyTexture(bgTexture);
+    SDL_DestroyTexture(heartAlive);
+    SDL_DestroyTexture(heartDead);
 }
 
 void Gameplay::render() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, bgTexture, NULL, NULL);
+    for (int i = 0; i < 3; ++i) {
+        SDL_Rect heartRect = {630 + i * 50, 30, 55, 55};
+        if (i < lives) {
+            SDL_RenderCopy(renderer, heartAlive, nullptr, &heartRect);
+        } else {
+            SDL_RenderCopy(renderer, heartDead, nullptr, &heartRect);
+        }
+    }
     renderGrid();
     renderClues();
     renderStatus(renderer, win, isLose(), lives);
@@ -88,7 +113,7 @@ void Gameplay::handleEvents(SDL_Event& e) {
 }
 
 void Gameplay::renderGrid() {
-    SDL_SetRenderDrawColor(renderer, 230, 230, 230, 255);
+    SDL_SetRenderDrawColor(renderer, 77, 108, 168, 255);
     for (int i = 0; i < gridSize; ++i) {
         for (int j = 0; j < gridSize; ++j) {
             SDL_Rect cell = { offsetX + j * cellSize, offsetY + i * cellSize, cellSize, cellSize };
@@ -100,7 +125,7 @@ void Gameplay::renderGrid() {
         for (int j = 0; j < gridSize; ++j) {
             SDL_Rect cell = { offsetX + j * cellSize + 1, offsetY + i * cellSize + 1, cellSize - 2, cellSize - 2 };
             if (playerMatrix[i][j] == 1) {
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_SetRenderDrawColor(renderer, 230, 230, 230, 255);
                 SDL_RenderFillRect(renderer, &cell);
             } else if (playerMatrix[i][j] == 2) {
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -110,13 +135,13 @@ void Gameplay::renderGrid() {
         }
     }
 
-    SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     for (int i = 0; i <= gridSize; ++i) {
         SDL_RenderDrawLine(renderer, offsetX, offsetY + i * cellSize, offsetX + gridSize * cellSize, offsetY + i * cellSize);
         SDL_RenderDrawLine(renderer, offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + gridSize * cellSize);
     }
 
-    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_SetRenderDrawColor(renderer, 230, 230, 230, 255);
     for (int i = 0; i <= gridSize; ++i) {
         if (i % 5 == 0) {
             SDL_RenderDrawLine(renderer, offsetX, offsetY + i * cellSize, offsetX + gridSize * cellSize, offsetY + i * cellSize);
@@ -145,7 +170,7 @@ TTF_Font* Gameplay::getFittingFont(const std::string& text, int maxWidth, int in
 }
 
 void Gameplay::renderClues() {
-    SDL_Color textColor = { 0, 0, 0, 255 };
+    SDL_Color textColor = {75, 0, 130, 255 };
     const int clueSpacing = 16;
 
     //Row clues
@@ -196,7 +221,7 @@ void Gameplay::renderClues() {
 
             SDL_Rect dstRect = {
                 offsetX + j * cellSize + (cellSize - surface->w) / 2,
-                yStart + k * clueSpacing,
+                (int)(yStart + k * clueSpacing),
                 surface->w,
                 surface->h
             };
@@ -236,9 +261,6 @@ void Gameplay::handleCellClick(SDL_Event e, int mouseX, int mouseY) {
             }
         } else if (e.button.button == SDL_BUTTON_RIGHT) {
             playerMatrix[row][col] = 2;
-            if (solution[row][col] != 2) {
-                lives--;
-            }
         }
         checkWin();
     }

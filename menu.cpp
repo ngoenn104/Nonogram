@@ -47,7 +47,7 @@ void Menu::render() {
 
     //"Nonogram"
     SDL_Color textColor = {255, 255, 255, 255};
-    SDL_Surface* textSurface1 = TTF_RenderText_Solid(fontLarge, "Nonogram", textColor);
+    SDL_Surface* textSurface1 = TTF_RenderText_Blended(fontLarge, "Nonogram", textColor);
     SDL_Texture* textTexture1 = SDL_CreateTextureFromSurface(renderer, textSurface1);
     SDL_Rect renderQuad1 = {210, 75, textSurface1->w, textSurface1->h};
     SDL_RenderCopy(renderer, textTexture1, NULL, &renderQuad1);
@@ -55,7 +55,7 @@ void Menu::render() {
     SDL_DestroyTexture(textTexture1);
 
     //"Pick your puzzle!"
-    SDL_Surface* textSurface2 = TTF_RenderText_Solid(fontMedium, "Pick your puzzle!", textColor);
+    SDL_Surface* textSurface2 = TTF_RenderText_Blended(fontMedium, "Pick your puzzle!", textColor);
     SDL_Texture* textTexture2 = SDL_CreateTextureFromSurface(renderer, textSurface2);
     SDL_Rect renderQuad2 = {245, 200, textSurface2->w, textSurface2->h};
     SDL_RenderCopy(renderer, textTexture2, NULL, &renderQuad2);
@@ -63,7 +63,7 @@ void Menu::render() {
     SDL_DestroyTexture(textTexture2);
 
     //10x10
-    SDL_Surface* buttonSurface1 = TTF_RenderText_Solid(fontSmall, "10x10", textColor);
+    SDL_Surface* buttonSurface1 = TTF_RenderText_Blended(fontSmall, "10x10", textColor);
     SDL_Texture* buttonTexture1 = SDL_CreateTextureFromSurface(renderer, buttonSurface1);
     SDL_Rect buttonRect1 = {350, 280, buttonSurface1->w, buttonSurface1->h};
     SDL_RenderCopy(renderer, buttonTexture1, NULL, &buttonRect1);
@@ -71,7 +71,7 @@ void Menu::render() {
     SDL_DestroyTexture(buttonTexture1);
 
     //15x15
-    SDL_Surface* buttonSurface2 = TTF_RenderText_Solid(fontSmall, "15x15", textColor);
+    SDL_Surface* buttonSurface2 = TTF_RenderText_Blended(fontSmall, "15x15", textColor);
     SDL_Texture* buttonTexture2 = SDL_CreateTextureFromSurface(renderer, buttonSurface2);
     SDL_Rect buttonRect2 = {350, 340, buttonSurface2->w, buttonSurface2->h};
     SDL_RenderCopy(renderer, buttonTexture2, NULL, &buttonRect2);
@@ -79,7 +79,7 @@ void Menu::render() {
     SDL_DestroyTexture(buttonTexture2);
 
     //20x20
-    SDL_Surface* buttonSurface3 = TTF_RenderText_Solid(fontSmall, "20x20", textColor);
+    SDL_Surface* buttonSurface3 = TTF_RenderText_Blended(fontSmall, "20x20", textColor);
     SDL_Texture* buttonTexture3 = SDL_CreateTextureFromSurface(renderer, buttonSurface3);
     SDL_Rect buttonRect3 = {340, 400, buttonSurface3->w, buttonSurface3->h};
     SDL_RenderCopy(renderer, buttonTexture3, NULL, &buttonRect3);
@@ -87,7 +87,7 @@ void Menu::render() {
     SDL_DestroyTexture(buttonTexture3);
 
     //"Rule"
-    SDL_Surface* buttonSurface4 = TTF_RenderText_Solid(fontSmall, "Rules", textColor);
+    SDL_Surface* buttonSurface4 = TTF_RenderText_Blended(fontSmall, "Rule", textColor);
     SDL_Texture* buttonTexture4 = SDL_CreateTextureFromSurface(renderer, buttonSurface4);
     SDL_Rect buttonRect4 = {500, 500, buttonSurface4->w, buttonSurface4->h};
     SDL_RenderCopy(renderer, buttonTexture4, NULL, &buttonRect4);
@@ -123,8 +123,7 @@ void Menu::handleEvents(SDL_Event& e) {
 
 void Menu::renderRules() {
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-
-    SDL_Rect paperRect = {50, 50, 700, 500};
+    SDL_Rect paperRect = {100, 10, 600, 600};
     SDL_RenderCopy(renderer, paperTexture, NULL, &paperRect);
 }
 

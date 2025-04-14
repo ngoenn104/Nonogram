@@ -40,6 +40,10 @@ private:
     void checkWin();
 
     TTF_Font* getFittingFont(const std::string& text, int maxWidth, int initialSize);
+
+    SDL_Texture* bgTexture;
+    SDL_Texture* heartAlive;
+    SDL_Texture* heartDead;
 };
 
 #endif

@@ -42,10 +42,4 @@ void renderStatus(SDL_Renderer* renderer, bool isWin, bool isLose, int lives) {
 
         renderText(renderer, text, 400, 300, color, 64);
     }
-
-    else {
-        std::string livesText = "Lives " + std::to_string(lives);
-        SDL_Color black = {0, 0, 0};
-        renderText(renderer, livesText, 700, 40, black, 30);
-    }
 }
