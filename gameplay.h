@@ -38,6 +38,7 @@ private:
 
     void renderGrid();
     void renderClues();
+    void renderOneClue(const std::string& clueStr, int x, int y);
     void checkWin();
 
     TTF_Font* getFittingFont(const std::string& text, int maxWidth, int initialSize);

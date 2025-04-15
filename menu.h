@@ -5,7 +5,6 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include <string>
-#include <vector>
 #include "gameplay.h"
 
 class Menu {
@@ -30,9 +29,6 @@ private:
 
     bool isPlaying = false;
     int boardSize;
-    std::vector<std::vector<int>> matrix;
-    std::vector<std::vector<int>> rowClues;
-    std::vector<std::vector<int>> colClues;
 
     Gameplay* gameplay = nullptr;
     Mix_Chunk* clickSound = nullptr;
