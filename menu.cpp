@@ -3,6 +3,7 @@
 #include "gameplay.h"
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <vector>
 #include <sstream>
 
@@ -20,6 +21,9 @@ Menu::Menu(SDL_Renderer* renderer) : renderer(renderer), showRules(false) {
     SDL_Surface* paperSurface = IMG_Load("assets/paper.png");
     paperTexture = SDL_CreateTextureFromSurface(renderer, paperSurface);
     SDL_FreeSurface(paperSurface);
+
+    clickSound = Mix_LoadWAV("assets/click.wav");
+    Mix_VolumeChunk(clickSound, 50);
 }
 
 Menu::~Menu() {
@@ -29,6 +33,11 @@ Menu::~Menu() {
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(paperTexture);
     TTF_Quit();
+
+    if (clickSound) {
+        Mix_FreeChunk(clickSound);
+        clickSound = nullptr;
+    }
 }
 
 void Menu::render() {
@@ -110,12 +119,16 @@ void Menu::handleEvents(SDL_Event& e) {
         int x, y;
         SDL_GetMouseState(&x, &y);
         if (isButtonClicked(x, y, 350, 280, 150, 50)) {
+            Mix_PlayChannel(-1, clickSound, 0);
             startGame(10);
         } else if (isButtonClicked(x, y, 350, 340, 150, 50)) {
+            Mix_PlayChannel(-1, clickSound, 0);
             startGame(15);
         } else if (isButtonClicked(x, y, 340, 400, 150, 50)) {
+            Mix_PlayChannel(-1, clickSound, 0);
             startGame(20);
         } else if (isButtonClicked(x, y, 500, 500, 100, 50)) {
+            Mix_PlayChannel(-1, clickSound, 0);
             showRules = !showRules;
         }
     }

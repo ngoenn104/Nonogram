@@ -3,8 +3,27 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
+Mix_Chunk* winSound = nullptr;
+Mix_Chunk* loseSound = nullptr;
+bool hasPlayedSound = false;
+
+void initStatusSounds() {
+    winSound = Mix_LoadWAV("assets/win.wav");
+    loseSound = Mix_LoadWAV("assets/lose.wav");
+    Mix_VolumeChunk(winSound, 128);
+    Mix_VolumeChunk(loseSound, 60);
+}
+
+void cleanupStatusSounds() {
+    Mix_FreeChunk(winSound);
+    Mix_FreeChunk(loseSound);
+    winSound = nullptr;
+    loseSound = nullptr;
+    hasPlayedSound = false;
+}
+
 void renderText(SDL_Renderer* renderer, const std::string& text, int x, int y, SDL_Color color, int fontSize) {
-    TTF_Font* font = TTF_OpenFont("assets/MagicBubble.ttf", fontSize);
+    TTF_Font* font = TTF_OpenFont("assets/PressStart.ttf", fontSize);
 
     SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -35,11 +54,19 @@ void renderBackground(SDL_Renderer* renderer, const std::string& imagePath) {
 
 void renderStatus(SDL_Renderer* renderer, bool isWin, bool isLose, int lives) {
     if (isWin || isLose) {
-        renderBackground(renderer, "assets/Background(2).png");
+        renderBackground(renderer, "assets/Bg.png");
 
-        SDL_Color color = isWin ? SDL_Color{0, 255, 0} : SDL_Color{255, 0, 0};
+        if (!hasPlayedSound) {
+            if (isWin && winSound) Mix_PlayChannel(-1, winSound, 0);
+            if (isLose && loseSound) Mix_PlayChannel(-1, loseSound, 0);
+            hasPlayedSound = true;
+        }
+
+        SDL_Color color = isWin ? SDL_Color{77, 108, 168, 255} : SDL_Color{77, 108, 168, 255};
         std::string text = isWin ? "YOU WIN" : "YOU LOSE";
 
-        renderText(renderer, text, 400, 300, color, 64);
+        renderText(renderer, text, 400, 300, color, 70);
+    } else {
+        hasPlayedSound = false;
     }
 }

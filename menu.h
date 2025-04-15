@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <string>
 #include <vector>
 #include "gameplay.h"
@@ -34,6 +35,7 @@ private:
     std::vector<std::vector<int>> colClues;
 
     Gameplay* gameplay = nullptr;
+    Mix_Chunk* clickSound = nullptr;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "status.h"
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -19,6 +20,9 @@ Gameplay::Gameplay(SDL_Renderer* renderer, int size, TTF_Font* font)
     heartDead = SDL_CreateTextureFromSurface(renderer, heartDeadSurface);
     SDL_FreeSurface(heartAliveSurface);
     SDL_FreeSurface(heartDeadSurface);
+
+    clickSound = Mix_LoadWAV("assets/click.wav");
+    Mix_VolumeChunk(clickSound, 45);
 
     int maxWidth = 600;
     int maxHeight = 450;
@@ -80,6 +84,8 @@ Gameplay::~Gameplay() {
     SDL_DestroyTexture(bgTexture);
     SDL_DestroyTexture(heartAlive);
     SDL_DestroyTexture(heartDead);
+
+    Mix_FreeChunk(clickSound);
 }
 
 void Gameplay::render() {
@@ -259,8 +265,10 @@ void Gameplay::handleCellClick(SDL_Event e, int mouseX, int mouseY) {
             if (solution[row][col] != 1) {
                 lives--;
             }
+            Mix_PlayChannel(-1, clickSound, 0);
         } else if (e.button.button == SDL_BUTTON_RIGHT) {
             playerMatrix[row][col] = 2;
+            Mix_PlayChannel(-1, clickSound, 0);
         }
         checkWin();
     }

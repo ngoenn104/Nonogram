@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <vector>
 #include <string>
 
@@ -44,6 +45,8 @@ private:
     SDL_Texture* bgTexture;
     SDL_Texture* heartAlive;
     SDL_Texture* heartDead;
+
+    Mix_Chunk* clickSound;
 };
 
 #endif
