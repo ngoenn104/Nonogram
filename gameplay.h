@@ -12,7 +12,6 @@ public:
     Gameplay(SDL_Renderer* renderer, int gridSize, TTF_Font* font);
     ~Gameplay();
 
-    void handleCellClick(SDL_Event e, int mouseX, int mouseY);
     void handleEvents(SDL_Event& e);
     void update();
     void render();
@@ -48,6 +47,11 @@ private:
     SDL_Texture* heartDead;
 
     Mix_Chunk* clickSound;
+
+    bool mouseIsBusy = false;
+    int startRowWhenDrag = -1, startColWhenDrag = -1;
+    Uint8 mouseClicking = 0;
+    void drawWithMouse(int row, int col, Uint8 button);
 };
 
 #endif

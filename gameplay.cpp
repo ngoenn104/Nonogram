@@ -53,35 +53,57 @@ Gameplay::~Gameplay() {
 }
 
 void Gameplay::handleEvents(SDL_Event& e) {
-    int x, y;
-    SDL_GetMouseState(&x, &y);
-
-    if (e.type == SDL_MOUSEBUTTONDOWN && !gameOver) {
+    if ((e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONUP) && !gameOver) {
         int x, y;
         SDL_GetMouseState(&x, &y);
+        int row = (y - offsetY) / cellSize;
+        int col = (x - offsetX) / cellSize;
 
-        handleCellClick(e, x, y);
+        if (row >= 0 && row < gridSize && col >= 0 && col < gridSize) {
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                mouseIsBusy = true;
+                startRowWhenDrag = row;
+                startColWhenDrag = col;
+                mouseClicking = e.button.button;
+                drawWithMouse(row, col, mouseClicking);
+            }
+            else if (e.type == SDL_MOUSEMOTION && mouseIsBusy) {
+                drawWithMouse(row, col, mouseClicking);
+            }
+            else if (e.type == SDL_MOUSEBUTTONUP) {
+                mouseIsBusy = false;
+                startRowWhenDrag = startColWhenDrag = -1;
+            }
+        }
     }
     if (win || isLose()) return;
 }
 
-void Gameplay::handleCellClick(SDL_Event e, int mouseX, int mouseY) {
-    int row = (mouseY - offsetY) / cellSize;
-    int col = (mouseX - offsetX) / cellSize;
+void Gameplay::drawWithMouse(int row, int col, Uint8 button) {
+    if (row != startRowWhenDrag && col != startColWhenDrag) return;
 
-    if (row >= 0 && row < gridSize && col >= 0 && col < gridSize) {
-        if (e.button.button == SDL_BUTTON_LEFT) {
-            playerMatrix[row][col] = 1;
-            if (solution[row][col] != 1) {
-                lives--;
+    int r1 = std::min(startRowWhenDrag, row);
+    int r2 = std::max(startRowWhenDrag, row);
+    int c1 = std::min(startColWhenDrag, col);
+    int c2 = std::max(startColWhenDrag, col);
+
+    for (int r = r1; r <= r2; ++r) {
+        for (int c = c1; c <= c2; ++c) {
+            if (button == SDL_BUTTON_LEFT) {
+                if (playerMatrix[r][c] != 1) {
+                    playerMatrix[r][c] = 1;
+                    if (solution[r][c] != 1) lives--;
+                    Mix_PlayChannel(-1, clickSound, 0);
+                }
+            } else if (button == SDL_BUTTON_RIGHT) {
+                if (playerMatrix[r][c] != 2) {
+                    playerMatrix[r][c] = 2;
+                    Mix_PlayChannel(-1, clickSound, 0);
+                }
             }
-            Mix_PlayChannel(-1, clickSound, 0);
-        } else if (e.button.button == SDL_BUTTON_RIGHT) {
-            playerMatrix[row][col] = 2;
-            Mix_PlayChannel(-1, clickSound, 0);
         }
-        checkWin();
     }
+    checkWin();
 }
 
 void Gameplay::checkWin() {
@@ -140,7 +162,7 @@ void Gameplay::renderGrid() {
         }
     }
 
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_SetRenderDrawColor(renderer, 190, 190, 190, 255);
     for (int i = 0; i <= gridSize; ++i) {
         SDL_RenderDrawLine(renderer, offsetX, offsetY + i * cellSize, offsetX + gridSize * cellSize, offsetY + i * cellSize);
         SDL_RenderDrawLine(renderer, offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + gridSize * cellSize);
