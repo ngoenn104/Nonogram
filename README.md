@@ -6,7 +6,8 @@ Nonogram là một trò chơi giải đố logic, người chơi phải tô màu
 # Ngưỡng điểm mong muốn  
 8 - 8.5  
 # Lí do  
-**1**  
+**1. Phần tham khảo**  
+- Cách khởi tạo cửa sổ, renderer, load font chữ, background, âm thanh lấy từ code mẫu  
 
 **2. Nguồn**   
 - Hình ảnh: https://pngtree.com/
