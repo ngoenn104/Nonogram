@@ -178,7 +178,7 @@ void Gameplay::renderGrid() {
 }
 
 void Gameplay::renderOneClue(const std::string& clueStr, int x, int y) {
-    SDL_Color textColor = {75, 0, 130, 255};
+    SDL_Color textColor = {58, 58, 78, 255};
     TTF_Font* font = getFittingFont(clueStr, cellSize, 16);
     SDL_Surface* surface = TTF_RenderText_Blended(font ? font : fontClue, clueStr.c_str(), textColor);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
